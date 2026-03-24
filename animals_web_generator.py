@@ -18,20 +18,24 @@ def create_animals_html_string(animals_data):
         locations = animal.get('locations', [])
         animal_type = characteristics.get('type')
 
-        # Start des Listenelements (entspricht der CSS-Klasse in der Vorlage)
+        # Start der Karte
         output += '    <li class="cards__item">\n'
 
-        # Felder einzeln hinzufügen, danach HTML-Zeilenumbruch <br/>
+        # Titel der Karte
         if name:
-            output += f"        Name: {name}<br/>\n"
-        if diet:
-            output += f"        Diet: {diet}<br/>\n"
-        if locations:
-            output += f"        Location: {locations[0]}<br/>\n"
-        if animal_type:
-            output += f"        Type: {animal_type}<br/>\n"
+            output += f'      <div class="card__title">{name}</div>\n'
 
-        # Ende des Listenelements
+        # Inhalt der Karte
+        output += '      <p class="card__text">\n'
+
+        if diet:
+            output += f'          <strong>Diet:</strong> {diet}<br/>\n'
+        if locations:
+            output += f'          <strong>Location:</strong> {locations[0]}<br/>\n'
+        if animal_type:
+            output += f'          <strong>Type:</strong> {animal_type}<br/>\n'
+
+        output += '      </p>\n'
         output += '    </li>\n'
 
     return output
