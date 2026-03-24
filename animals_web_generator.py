@@ -7,37 +7,51 @@ def load_data(file_path):
         return json.load(handle)
 
 
-def display_animals(animals_data):
-    """ Geht der Reihe nach alle Tiere durch und zeigt zu jedem bestimmte Informationen an """
+def create_animals_string(animals_data):
+    """ Erzeugt einen langen String mit allen Tier-Informationen """
+    output = ''
     for animal in animals_data:
-        # Extraktion der gewünschten Felder
+        # Extraktion der Felder (mit Sicherheitsprüfung via .get())
         name = animal.get('name')
         characteristics = animal.get('characteristics', {})
         diet = characteristics.get('diet')
         locations = animal.get('locations', [])
         animal_type = characteristics.get('type')
 
-        # Ausgabe, sofern das Feld existiert
+        # String mit Zeilenumbruch (\n)
         if name:
-            print(f"Name: {name}")
+            output += f"Name: {name}\n"
         if diet:
-            print(f"Diet: {diet}")
+            output += f"Diet: {diet}\n"
         if locations:
-            # Nur den ersten Ort aus der Liste ausgeben
-            print(f"Location: {locations[0]}")
+            output += f"Location: {locations[0]}\n"
         if animal_type:
-            print(f"Type: {animal_type}")
+            output += f"Type: {animal_type}\n"
 
-        # Leerzeile zwischen den Tieren
-        print("-" * 20)
+        # Ein zusätzlicher Umbruch für den Abstand in der HTML-Ausgabe
+        output += "\n"
+    return output
 
 
 def main():
-    # Daten laden
+    # 1. Daten laden
     animals_data = load_data('animals_data.json')
-    # Daten ausgeben
-    display_animals(animals_data)
 
+    # 2. Tier-String erstellen
+    animals_info_string = create_animals_string(animals_data)
+
+    # 3. Vorlage lesen
+    with open("animals_template.html", "r") as f:
+        template_content = f.read()
+
+    # 4. Platzhalter ersetzen
+    final_html = template_content.replace("__REPLACE_ANIMALS_INFO__", animals_info_string)
+
+    # 5. Neue Datei schreiben
+    with open("animals.html", "w") as f:
+        f.write(final_html)
+
+    print("Die Datei 'animals.html' wurde erfolgreich erstellt!")
 
 if __name__ == "__main__":
     main()
